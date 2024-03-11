@@ -1,30 +1,34 @@
-- hosts: localhost
-  #become: yes
-  tasks: 
-    - name: Deploying Application pods...
-      shell: | 
-         if [ `kubectl get daemonset | grep -v NAME | awk '{print $1}' | grep devopsproj2 | wc -l` -gt 0 ]; then  
-            echo "deleteing previous application deployment"
-            kubectl delete daemonset `kubectl get daemonset | grep -v NAME | awk '{print $1}' | grep devopsproj2`
-            echo "creating new application deployment"
-            kubectl create daemonset devopsproj2 --image=nikhiltr1/devopsproj2:{{ build }}
-         else 
-            echo "Deploying proj2 Application"
-            kubectl create daemonset devopsproj2 --image=nikhiltr1/devopsproj2:{{ build }}
-         fi
-    - name: deploying service
-      shell: |
-         if [ `kubectl get svc | grep devopsproj2  | awk '{print $1}' | wc -l` -gt 0 ]; then
-            echo "app service found, No actions taken"
-            #kubectl delete svc `kubectl get svc | grep devopsproj2 | awk '{print $1}'`
-         else
-            echo "Creating App Services"
-            kubectl expose daemonset devopsproj2 --name devopsproj2 --type NodePort --port 80
-         fi
-    #- name: increase replicas 
-     # shell: kubectl scale deploy proj2 --replicas=2
-      
-    #- name: deploy app
-    #  shell: kubectl create deployment projapp --image=nikhiltr1/projapp:{{ build }}
-    #- name: deploy service
-    #  shell: kubectl expose deployment projapp --name projapp --type NodePort --port 80 --target-port 8080
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: proj2
+  namespace: default
+  #labels:
+spec:
+  selector:                #kube automatically assign the names
+    matchLabels:
+      app: proj2           #name should match- proj2
+  template:
+    metadata:
+     #name:                #it is already assigned
+     labels:
+       app: proj2
+    spec:
+     containers:
+      - name: cont1
+        image: nikhiltr1/devopsproj2:{{ build }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: proj2-svc
+  namespace: default
+  #labels: optional
+spec:
+  type: NodePort
+  selector:
+    app: proj2                        #Label name of the pods where you want to send traffic(instead of IP's)
+  ports:
+    - name: cont1port
+      port: 80                        #Port of the image which is defined earlier
+      nodePort: 30008                 #Ranges from 30000-32767
