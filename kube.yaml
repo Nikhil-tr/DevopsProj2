@@ -4,6 +4,7 @@ metadata:
   name: proj2
   namespace: default
   #labels:
+my_variable: "{{ build }}"
 spec:
   selector:                #kube automatically assign the names
     matchLabels:
@@ -16,7 +17,7 @@ spec:
     spec:
      containers:
       - name: cont1
-        image: nikhiltr1/devopsproj2:"{{build}}"
+        image: nikhiltr1/devopsproj2:$my_variable
 ---
 kind: Service
 apiVersion: v1
