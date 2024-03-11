@@ -1,0 +1,30 @@
+- hosts: localhost
+  #become: yes
+  tasks: 
+    - name: Deploying Application pods...
+      shell: | 
+         if [ `kubectl get daemonset | grep -v NAME | awk '{print $1}' | grep devopsproj2 | wc -l` -gt 0 ]; then  
+            echo "deleteing previous application deployment"
+            kubectl delete daemonset `kubectl get daemonset | grep -v NAME | awk '{print $1}' | grep devopsproj2`
+            echo "creating new application deployment"
+            kubectl create daemonset devopsproj2 --image=nikhiltr1/devopsproj2:{{ build }}
+         else 
+            echo "Deploying proj2 Application"
+            kubectl create daemonset devopsproj2 --image=nikhiltr1/devopsproj2:{{ build }}
+         fi
+    - name: deploying service
+      shell: |
+         if [ `kubectl get svc | grep devopsproj2  | awk '{print $1}' | wc -l` -gt 0 ]; then
+            echo "app service found, No actions taken"
+            #kubectl delete svc `kubectl get svc | grep devopsproj2 | awk '{print $1}'`
+         else
+            echo "Creating App Services"
+            kubectl expose daemonset devopsproj2 --name devopsproj2 --type NodePort --port 80
+         fi
+    #- name: increase replicas 
+     # shell: kubectl scale deploy proj2 --replicas=2
+      
+    #- name: deploy app
+    #  shell: kubectl create deployment projapp --image=nikhiltr1/projapp:{{ build }}
+    #- name: deploy service
+    #  shell: kubectl expose deployment projapp --name projapp --type NodePort --port 80 --target-port 8080
