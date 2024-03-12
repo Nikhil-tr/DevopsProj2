@@ -16,7 +16,7 @@ spec:
     spec:
      containers:
       - name: cont1
-        image: {{ build }}
+        image: nikhiltr1/devopsproj2:{{ build }}
 ---
 kind: Service
 apiVersion: v1
