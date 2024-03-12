@@ -2,7 +2,7 @@
   hosts: localhost
   become: true
   vars:
-    image: "{{ lookup('env', 'build') | default(nikhiltr1/devopsproj2:1) }}"
+    build: "{{ lookup('env', 'build') | default(nikhiltr1/devopsproj2:1) }}"
   tasks:
     - name: Render Kubernetes manifest template
       template:
