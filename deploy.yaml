@@ -1,0 +1,14 @@
+- name: Deploy Kubernetes app with variable number of replicas
+  hosts: localhost
+  become: true
+  vars:
+    image: "{{ lookup('env', 'build') | default(nikhiltr1/devopsproj2:1) }}"
+  tasks:
+    - name: Render Kubernetes manifest template
+      template:
+        src: kube.yaml
+        dest: /tmp/deployment.yaml
+        mode: '0644'
+
+    - name: Apply Kubernetes manifest
+      command: kubectl apply -f /tmp/deployment.yaml
