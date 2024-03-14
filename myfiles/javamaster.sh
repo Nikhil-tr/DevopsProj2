@@ -1,7 +1,10 @@
-#JAVA_11
-sudo add-apt-repository ppa:openjdk-r/ppa -y
-sudo apt-get update -y
-sudo apt-get install -y fontconfig openjdk-11-jre openjdk-11-jdk
+#JAVA
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre
+java -version
+openjdk version "17.0.8" 2023-07-18
+OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
 
 #JENKIN
 curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
