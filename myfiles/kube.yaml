@@ -31,5 +31,5 @@ spec:
     app: devopsproj2                                    #Label name of the pods where you want to send traffic(instead of IP's)
   ports:
     - name: cont1port
-      port: 3000                                        #Port of the image which is defined earlier
+      port: 80                                        #Port of the image which is defined earlier
       nodePort: 30023                                   #Ranges from 30000-32767
